@@ -1,0 +1,178 @@
+{extend name='public/modal'} {block name='content'}
+<style type="text/css">
+  .submit_btn {
+    float: center;
+  }
+</style>
+<form action="view_clinic" class="layui-form layui-form-pane" id="mainForm" method="post">
+
+  <div class="layui-form-item layui-input-inline" style="display: none">
+    <label class="layui-form-label">用户id</label>
+    <div class="layui-input-block">
+      <input type="user_id" name="user_id" class="layui-input" value="{$data.user_id}">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">诊所名称</label>
+    <div class="layui-input-block">
+      <input type="clinic" name="clinic" disabled="" class="layui-input" value="{$data.clinic}">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">姓名</label>
+    <div class="layui-input-block">
+      <input name="name" type="name" disabled="" class="layui-input" value="{$data.name}">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">性别</label>
+    <div class="layui-input-block">
+      <input name="sex" type="text" disabled="" class="layui-input" value="{$data.sex}">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">联系电话</label>
+    <div class="layui-input-block">
+      <input name="tel" type="text" disabled="" class="layui-input" value="{$data.tel}">
+    </div>
+  </div>
+
+  <div class="layui-form-item ">
+    <label class="layui-form-label">身份证</label>
+    <div class="layui-input-block">
+      <input name="card_id" type="text" disabled="" style="    width: 78%;" class="layui-input" value="{$data.card_id}">
+    </div>
+  </div>
+
+
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">省</label>
+    <div class="layui-input-block">
+      <input type="province" name="province" disabled="" class="layui-input" value="{$data.province}">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">市</label>
+    <div class="layui-input-block">
+      <input type="city" name="city" disabled="" class="layui-input" value="{$data.city}">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">区</label>
+    <div class="layui-input-block">
+      <input type="area" name="area" disabled="" class="layui-input" value="{$data.area}">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-input-inline">
+    <label class="layui-form-label">详细地址</label>
+    <div class="layui-input-block">
+      <input type="address" name="address" disabled="" class="layui-input" value="{$data.address}">
+    </div>
+  </div>
+
+  <div class="layui-form-item lay">
+    <label class="layui-form-label">机构许可证</label>
+    <div class="layui-input-block">
+      {foreach $data.card_img as $item}
+      <img src="{$item.url}" style="    width: 120px;    height: 100px;" disabled="" name="card_img" /> {/foreach}
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">门头照片集</label>
+    <div>
+      {foreach $data.atlas as $item}
+      <img src="{$item.url}" style="    width: 120px;    height: 100px;" disabled="" name="atlas" /> {/foreach}
+    </div>
+  </div>
+
+
+  <div class="layui-form-item lay" style="height: 100px;">
+    <label class="layui-form-label" style="height: 100px;">简介</label>
+    <div class="layui-input-block">
+      <textarea class="layui-input" style="height: 100px;">{$data.abstract}</textarea>
+      <!-- <input type="abstract" disabled="" name="abstract" class="layui-input" value="{$data.abstract}"> -->
+    </div>
+  </div>
+  <input type="hidden" name="id" class="layui-input" value="{$data.id}"> 
+  {neq name="data.type" value="1"}
+    <div class="layui-form-item">
+      <label class="layui-form-label">审核</label>
+      <div class="layui-input-inline">
+        <select name="type" lay-filter="review">
+          <option value="0"></option>
+          <option value="1" {eq name="data.type" value="1" }selected="true" {/eq}>通过</option>
+          <option value="2" {eq name="data.type" value="2" }selected="true" {/eq}>不通过</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">备注</label>
+      <div class="layui-input-block">
+        <input type="remarks" name="remarks" class="layui-input" value="{$data.remarks}">
+      </div>
+    </div>
+  {/neq}
+  </div>
+
+  {neq name="data.type" value="1"}
+  <div class="layui-form-item">
+    <div class="layui-input-block submit_btn">
+      <input id="addReset" type="reset" style="display: none" value="这个是Form清除" />
+      <button type="submit" class="layui-btn layui-btn-success">保存</button>
+    </div>
+  </div>
+  {/neq}
+
+
+
+</form>
+{/block} {block name='js'}
+<script type="text/javascript">
+  $(function () {
+    var options = {
+      type: 'post', //post提交
+      //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+      dataType: "json", //json格式
+      data: {}, //如果需要提交附加参数，视情况添加
+      clearForm: false, //成功提交后，清除所有表单元素的值
+      resetForm: false, //成功提交后，重置所有表单元素的值
+      cache: false,
+      async: false, //同步返回
+      success: function (data) {
+        if (data.code == 0) {
+          layer.msg(data.msg);
+        } else {
+          layer.msg(data.msg, {
+            icon: 1,
+            time: 500
+          }, function () {
+            $("#reset").click();
+            lotus_close();
+            parent.location.reload();
+          });
+        }
+        //服务器端返回处理逻辑
+      },
+      error: function (XmlHttpRequest, textStatus, errorThrown) {
+        layer.msg('操作失败:服务器处理失败');
+      }
+    };
+    layui.use('form', function () {
+      var form = layui.form;
+      $('#mainForm').ajaxForm(options).submit(function (data) {});
+    });
+
+  })
+  // });
+</script>
+{/block}

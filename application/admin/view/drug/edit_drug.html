@@ -1,0 +1,177 @@
+{extend name='public/modal'} {block name='content'}
+<style type="text/css">
+  .submit_btn {
+    float: center;
+  }
+  .picadd {
+    height: 36px;
+    line-height: 36px;
+    margin-left: 18%;
+  }
+</style>
+<form action="edit_drug" class="layui-form layui-form-pane" id="mainForm" method="post">
+   
+    <div class="layui-form-item ">
+      <label class="layui-form-label">选择诊所</label>
+      <div class="layui-input-block">
+          <select name="settled_id" id="settled_id" lay-filter="settled_id" >
+              <option value="">所有诊所</option>
+          </select>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">药品名称</label>
+        <div class="layui-input-block">
+          <input name="name" type="name" class="layui-input" id="name" placeholder="药品名称">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+          类型
+        </label>
+        <div class="layui-input-block">
+            <select id="drug_type"   name="drug_type" class="form-control">
+             <option value="">请选择类型</option>
+             <option value="0">中药</option>
+             <option value="1">西药</option>
+             <option value="2">收费项目</option>
+         </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">用法</label>
+        <div class="layui-input-block">
+          <input name="method"  class="layui-input" id="method" placeholder="用法">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">单位</label>
+        <div class="layui-input-block">
+          <input name="unit"  class="layui-input" id="unit" placeholder="单位">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">单价</label>
+        <div class="layui-input-block">
+          <input name="price" class="layui-input" id="price" placeholder="单价">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">斗位</label>
+        <div class="layui-input-block">
+          <input name="bucket" class="layui-input" id="bucket" placeholder="斗位">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">拼音</label>
+        <div class="layui-input-block">
+          <input name="pinyin" class="layui-input" id="pinyin" placeholder="拼音">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">库存</label>
+        <div class="layui-input-block">
+          <input name="stock" class="layui-input" id="stock" placeholder="库存">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">规格</label>
+        <div class="layui-input-block">
+          <input name="spec" class="layui-input" id="spec" placeholder="规格">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label  class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+          <input name="remarks" class="layui-input" id="remarks" placeholder="备注">
+        </div>
+    </div>
+    
+
+    <div class="layui-form-item">
+      <div class="layui-input-block submit_btn">
+        <input id="addReset" type="reset" style="display: none" value="这个是Form清除" />
+        <button type="submit" class="layui-btn layui-btn-success">保存</button>
+      </div>
+    </div>
+  </form>
+  {/block} {block name='js'}
+  <script> 
+      //搜索显示所有诊所
+      settlled('settled_id');
+      // 获取列表
+      function settlled(obj,id = 0) {
+          $.ajax({
+            type: 'POST',
+            url: 'settlled',
+            dataType:  'json',
+            success: function(ret){
+              console.log("诊所",ret);
+              if(ret.code == 200){
+                var h = '<option value="" >请选择诊所</option>';
+                  $.each(ret['data'], function(k,v) {
+                    h += '<option value="'+v['id']+'">'+v['clinic']+'</option>'
+                  });
+                  $('#'+obj).html(h);
+                  // form.render('select');
+              }else{
+                layer.msg(ret.msg,{icon: 5,time:2000});
+              }
+            },error: function (err) {
+                  var err_msg = err.responseText
+                  if(err_msg.status_code=401);
+                  layer.msg("对不起,您没有该权限!");
+            }
+          });
+      }
+  </script>
+
+  <script type="text/javascript">
+    $(function () {
+      var options = {
+        type: 'post', //post提交
+        //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+        dataType: "json", //json格式
+        data: {}, //如果需要提交附加参数，视情况添加
+        clearForm: false, //成功提交后，清除所有表单元素的值
+        resetForm: false, //成功提交后，重置所有表单元素的值
+        cache: false,
+        async: false, //同步返回
+        success: function (data) {
+          if (data.code == 0) {
+            layer.msg(data.msg);
+          } else {
+            layer.msg(data.msg, {
+              icon: 1,
+              time: 500
+            }, function () {
+              $("#reset").click();
+              lotus_close();
+              parent.location.reload();
+            });
+          }
+          //服务器端返回处理逻辑
+        },
+        error: function (XmlHttpRequest, textStatus, errorThrown) {
+          layer.msg('操作失败:服务器处理失败');
+        }
+      };
+      layui.use('form', function () {
+        var form = layui.form;
+        $('#mainForm').ajaxForm(options).submit(function (data) {});
+      });
+
+    })
+    // });
+  </script>
+  {/block}

@@ -1,0 +1,92 @@
+{include file='public/head'}
+    <style type="text/css">
+        .imgDiv {
+            display: inline-block;
+            position: relative;
+        }
+ 
+          .delete {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                width: 20px;
+                height: 20px;
+                display: none;
+            }
+    </style>
+<div id="dialog-imageUploader">
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row" style="border-bottom:1px solid #f4f4f4;">
+            <div class="margin pull-right">
+                <form action="{:url('admin/Picmanagement/upload')}" id="myForm" enctype="multipart/form-data" method="post">
+                    <div class="btn btn-success" style="cursor: pointer">本地上传</div>
+                    <input type="file" id="file" name="image[]" multiple="multiple" onchange="ajaxForm()"
+                           style="margin-top: -30px;width: 82px;height: 34px;opacity: 0;cursor: pointer;"/>
+                </form>
+            </div>
+            <div class="tj_left"> 
+            <!-- <button class="layui-btn layui-btn-small " onclick="x_admin_show('添加','showAddfile.html',0,0)" ><i class="layui-icon" style="font-size: 30px; ">&#xe61f;</i>添加</button>  -->
+          </div>
+             <div class="sx_right">
+         <div style="margin-top: 6px;margin-right: 10px;"><button onclick="javascript:location.reload()" class="layui-btn layui-btn-small x-right" style="width: 82px;height: 32px;">刷新</button></div>
+       </div>
+        </div>
+
+        <div class="row" id="dialog-content">
+            {volist name="filelist" id="file"}
+                <div class="margin imgDiv" onmouseover="show(this)" onmouseout="hide(this)"  style="width: 120px;height: 120px;float: left;text-align: center;line-height: 120px;">
+                    <img class="img-thumbnail" style="max-width: 120px; max-height: 120px;"  
+                         onclick="selectImage(this,'{$file.id}')" 
+                         src="{$file.url}">
+
+                    <div class="cover" onclick="cancelSelectImage(this,'{$file.id}')"></div>
+                    <img src="__install__/img/del.png" class="delete" onclick="dels('{$file.id}')" />
+                </div>
+                
+                
+                
+            {/volist}
+        </div>
+    </div>
+    <!-- /.box-body -->
+    <div class="page">
+      <div>
+        {$filelist->render()}
+     </div>
+   </div>
+    
+</div>
+<script type="text/javascript">
+
+  function show(thisObj)  
+  {  
+     $(thisObj).children(".delete").css("display","block");  
+  } 
+  function hide(thisObj)  
+  {  
+    $(thisObj).children(".delete").css("display","none");  
+  }   
+function dels(id){
+    layer.confirm('确定要删除吗?',{
+          btn: ['确定','取消'] //按钮
+        },function(){
+          $.post("{:url('/admin/picmanagement/del')}", {id:id}, function(data, textStatus, xhr) {
+            /*optional stuff to do after success */
+            if(data.code==0){
+              layer.msg(data.msg);
+            }else{
+              layer.msg(data.msg,{icon:1,time:500},function(){
+                $("#reset").click();
+                x_admin_close();
+                location.reload();
+              });
+            }
+          });
+        });  
+  }
+
+ 
+    $('#dialog-imageUploader .pagination a[href]').attr('onclick', 'tabPage(this)');
+</script>
+{include file='public/foot'}

@@ -1,0 +1,132 @@
+{extend name='public/modal'} {block name='content'}
+<style type="text/css">
+  .submit_btn {
+    float: center;
+  }
+  .picadd {
+    height: 36px;
+    line-height: 36px;
+    margin-left: 18%;
+  }
+</style>
+<form action="edit_other" class="layui-form layui-form-pane" id="mainForm" method="post">
+    <input type="hidden" name="id" value="{$data.id|default=''}"  class="layui-input"  hidden="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">
+        图集
+      </label>
+      <div class="layui-input-block">
+        <a>
+          <div onclick="addfiles()" class="picadd" style="cursor:pointer">添加图片</div>
+        </a>
+        <!-- <div id="new" class="picadd">图片管理</div> -->
+
+        <div id="thelist" class="uploader-list"></div>
+        <div style="clear: both;"></div>
+
+      </div>
+    </div>
+
+    <!-- 图片管理s -->
+    <input type="hidden" id="imgurl" value="{$data['imgurl']|default=''}" hidden>
+
+    <input type="hidden" id="imgurls" value="{$data['imgurl']|default=''}" hidden>
+
+    <!-- 最终提交的名字 -->
+    <input type="hidden" name="files" id="parentIframe" value="{$data.files|default=''}" hidden>
+
+    <input type="hidden" id="parentIframe1" value="{$data.files|default=''}" hidden>
+
+    <input type="text" id="dshow" value="" hidden="" >
+
+    <!-- 图片管理e -->
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+          位置
+        </label>
+        <div class="layui-input-block">
+            {switch name="$data.area"}
+             {case value="0"}<input type="text" name="area" value="首页轮播图"  class="layui-input" readonly="readonly">{/case} 
+             {case value="1"}<input type="text" name="area" value="诊所轮播图"  class="layui-input" readonly="readonly">{/case} 
+             {default /}无 
+            {/switch}
+          
+        </div>
+    </div>
+
+    </div>
+
+    <div class="layui-form-item">
+      <div class="layui-input-block submit_btn">
+        <input id="addReset" type="reset" style="display: none" value="这个是Form清除" />
+        <button type="submit" class="layui-btn layui-btn-success">保存</button>
+      </div>
+    </div>
+  </form>
+  {/block} {block name='js'}
+
+  <script type="text/javascript" src="__common__/js/piccheckbox.js"></script>
+
+  <script type="text/javascript">
+    //单图添加
+    function addfile() {
+      var b = $('#single_parentIframe').val();
+      if (b) {
+        b = b.split(',');
+        console.log(b.length);
+        layer.msg('请先删除再添加，只能选单张喔！');
+      } else {
+        lotus_show('图片管理器', "{:url('admin/Picmanagement/showAddfilelist')}", 0, 0);
+        $("#dshow").val('1');
+      }
+    }
+
+    //多图添加
+    function addfiles() {
+      $("#dshow").val('');
+      lotus_show('图片管理器', "{:url('admin/Picmanagement/showAddfilelist')}", 0, 0)
+    }
+  </script>
+
+
+  <script type="text/javascript">
+    $(function () {
+      var options = {
+        type: 'post', //post提交
+        //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+        dataType: "json", //json格式
+        data: {}, //如果需要提交附加参数，视情况添加
+        clearForm: false, //成功提交后，清除所有表单元素的值
+        resetForm: false, //成功提交后，重置所有表单元素的值
+        cache: false,
+        async: false, //同步返回
+        success: function (data) {
+          if (data.code == 0) {
+            layer.msg(data.msg);
+          } else {
+            layer.msg(data.msg, {
+              icon: 1,
+              time: 500
+            }, function () {
+              $("#reset").click();
+              lotus_close();
+              parent.location.reload();
+            });
+          }
+          //服务器端返回处理逻辑
+        },
+        error: function (XmlHttpRequest, textStatus, errorThrown) {
+          layer.msg('操作失败:服务器处理失败');
+        }
+      };
+      layui.use('form', function () {
+        var form = layui.form;
+        $('#mainForm').ajaxForm(options).submit(function (data) {});
+      });
+
+    })
+    // });
+  </script>
+  {/block}

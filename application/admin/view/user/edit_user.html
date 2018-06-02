@@ -1,0 +1,129 @@
+{extend name='public/modal'}
+{block name='content'}
+<style type="text/css">
+    .submit_btn{
+         float: center;
+  }
+</style>
+<form action="edit_user" class="layui-form layui-form-pane" id="mainForm" method="post">
+
+    <form class="form-horizontal" id='addForm' action="addUser">
+                        <div class="layui-form-item">
+                          <label class="layui-form-label" style="border-style:none;background-color:#ffffff;">主图展示</label>
+                          <div class="layui-input-block">
+                             <img src="{$list.avatarUrl}" id="test1" style="width: 200px;height: 150px;" />
+                          </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                账号
+                            </label>
+                            <div class="layui-input-block">
+                                 <input type="text" disabled value="{$list.tel}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                昵称
+                            </label>
+                            <div class="layui-input-block">
+                                 <input type="text" disabled value="{$list.name}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                姓名
+                            </label>
+                            <div class="layui-input-block">
+                                 <input type="text" disabled value="{$list.username}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                性别
+                            </label>
+                            <div class="layui-input-block">
+                                 <input type="text" disabled value="{$list.sex}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                区域
+                            </label>
+                            <div class="layui-input-block">
+                                 <input type="text" disabled value="{$list.province}{$list.city}{$list.area}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                详细地址
+                            </label>
+                            <div class="layui-input-block">
+                                 <input type="text" disabled value="{$list.address}" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                身份证
+                            </label>
+                            <div class="layui-input-block">
+                                 <input type="text" disabled value="{$list.cardid}" class="layui-input">
+                            </div>
+                        </div>
+
+
+                </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block submit_btn">
+                    <input id="addReset" type="reset" style="display: none" value="这个是Form清除" />
+                    <button type="submit" class="layui-btn layui-btn-success">保存</button>
+                </div>
+            </div>
+</form>
+{/block}
+{block name='js'}
+<script type="text/javascript">
+  
+  $(function(){
+    var options = {
+              type:'post',           //post提交
+              //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+              dataType:"json",        //json格式
+              data:{},    //如果需要提交附加参数，视情况添加
+              clearForm: false,        //成功提交后，清除所有表单元素的值
+              resetForm: false,        //成功提交后，重置所有表单元素的值
+              cache:false,
+              async:false,          //同步返回
+              success:function(data){
+                if(data.code==0){
+                  layer.msg(data.msg);
+                }else{
+                  layer.msg(data.msg,{icon:1,time:500},function(){
+                    $("#reset").click();
+                    lotus_close();
+                    parent.location.reload();
+                  });
+                }
+                  //服务器端返回处理逻辑
+                },
+                error:function(XmlHttpRequest,textStatus,errorThrown){
+                  layer.msg('操作失败:服务器处理失败');
+                }
+              };
+              layui.use('form', function(){
+                var form = layui.form;
+                $('#mainForm').ajaxForm(options).submit(function(data){});
+              });
+
+            })
+      // });
+    </script>
+    {/block}

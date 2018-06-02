@@ -1,0 +1,113 @@
+{extend name='public/base'}
+{block name='content'}
+<style type="text/css">
+.imgDiv {
+  display: inline-block;
+  position: relative;
+}
+
+.delete {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+  display: none;
+}
+
+</style>
+<!-- Main content -->
+<section class="content">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">操作栏</h3>
+    </div>
+    <div class="box-body"  style="padding: 15px;">
+      <div class="row">
+        <div class="tj_left" style="margin-left: 30px;"> 
+         <div class="header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>全选
+         <button class="btn  btn-danger btn-sm" onclick="delAll()">批量删除</button>
+         <button class="btn  btn-success  btn-sm btn-small" onclick="lotus_show('添加','showAddfile.html',0,0)" ><i class="layui-icon" style="font-size: 10px; ">&#xe61f;</i>添加</button> 
+         <button onclick="javascript:location.reload()" class="btn btn-info btn-sm">刷新</button>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ <div class="row" >
+  <div class="col-xs-12">
+    <!-- /.box -->
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">列表</h3>
+        <span class="total">总共&nbsp;{$total}&nbsp;条记录</span> 
+      </div>
+      <div id="dialog-imageUploader">
+        <!-- /.box-header -->
+        <div class="box-body">
+
+         <div class="row" id="dialog-content">
+          {volist name="filelist" id="file"}
+          <div class="margin imgDiv"  style="width: 120px;height: 120px;float: left;text-align: center;line-height: 120px;">
+            <img class="img-thumbnail" style="max-width: 100px; max-height: 100px;"  
+            src="{$file.url}" ondblclick="tClick('{$file.url}')">
+            <div class="cover" onclick="cancelSelectImage(this,'{$file.id}')"></div>
+            <div class="layui-form-checkbox" lay-skin="primary" data-id='{$file.id}' style="display: block;"><i class="layui-icon">&#xe605;</i></div>
+          </div>
+
+          {/volist}
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="page page_right"> 
+        <div>
+          {$page}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+<!-- /.content -->
+{/block}
+{block name="js"}
+
+{/block}
+{block name="script"}
+<script type="text/javascript">
+ function delAll (argument) {
+  var datas = tableCheck.getData();
+        // layer.confirm('确认要全部删除吗？',function(index){
+        //     //捉到所有被选中的，发异步进行删除
+        //     layer.msg('删除成功', {icon: 1});
+        //     $(".layui-form-checked").not('.header').parents('tr').remove();
+        // });
+        layer.confirm('确定要删除吗?',{
+          btn: ['确定','取消'] //按钮
+        },function(){
+          $.post("{:url('admin/picmanagement/delalls')}", {id:datas}, function(data, textStatus, xhr) {
+            /*optional stuff to do after success */
+            if(data.code==0){
+              layer.msg(data.msg);
+            }else{
+              layer.msg(data.msg,{icon:1,time:800},function(){
+                location.reload();
+              });
+            }
+          });
+        });  
+      }
+
+
+      function tClick(url){
+      //页面层
+      layer.open({
+        type: 1,
+          skin: '', //加上边框
+          area: ['900px', '648px'], //宽高
+          content: "<center style='margin-top:40px;'><img width='800' height='500' src="+url+"></center>"
+        });
+    }
+  </script>
+  {/block}

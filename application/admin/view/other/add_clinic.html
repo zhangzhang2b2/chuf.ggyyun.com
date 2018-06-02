@@ -1,0 +1,177 @@
+{extend name='public/modal'}
+{block name='content'}
+<style type="text/css">
+.submit_btn{
+ float: center;
+}
+</style>
+<form action="add_clinic" class="layui-form layui-form-pane" id="mainForm" method="post">
+  <div class="layui-form-item">
+    <label  class="layui-form-label">用户id</label>
+    <div class="layui-input-block">
+      <input type="user_id" name="user_id"  class="layui-input" id="user_id" placeholder="用户id">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">诊所名称</label>
+    <div class="layui-input-block">
+      <input type="clinicname" name="clinicname" class="layui-input" id="clinicname" placeholder="请输入诊所名称">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">姓名</label>
+    <div class="layui-input-block">
+      <input name="name" type="name" class="layui-input" id="name" placeholder="姓名">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">性别</label>
+    <div class="layui-input-block">
+      <input name="sex" type="text" class="layui-input" id="sex" placeholder="性别">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">联系电话</label>
+    <div class="layui-input-block">
+      <input name="tel" type="text" class="layui-input" id="tel" placeholder="请输入手机号码">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">身份证</label>
+    <div class="layui-input-block">
+      <input name="idcard" type="text" class="layui-input" id="idcard" placeholder="请输入身份证号码">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">详细地址</label>
+    <div class="layui-input-block">
+      <input type="address" name="address" class="layui-input"
+      id="address" placeholder="请输入电子邮箱">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">省</label>
+    <div class="layui-input-block">
+      <input type="province" name="province" class="layui-input"
+      id="province" placeholder="省">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">市</label>
+    <div class="layui-input-block">
+      <input type="city" name="city" class="layui-input"
+      id="city" placeholder="市">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">区</label>
+    <div class="layui-input-block">
+      <input type="area" name="area" class="layui-input"
+      id="area" placeholder="区">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">医疗机构许可证</label>
+    <div class="layui-input-block">
+      <img src="" /> 
+      <input id="img_upload" type="file" name="licence" multiple="true" value=""/>                             
+    </div>
+  </div>                         
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">门头照</label>
+    <div class="layui-input-block">
+      <img src="" name="logo" /> 
+      <input id="img_upload" type="file" name="logo" multiple="true" value=""/>                             
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">照片集</label>
+    <div class="layui-input-block">
+      <img src="" name="photo" > 
+      <input id="img_upload" type="file" name="photo" multiple="true" value=""/>                             
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">简介</label>
+    <div class="layui-input-block">
+      <input type="brief" name="brief" class="layui-input"
+      id="brief" placeholder="诊所简介">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label  class="layui-form-label">备注</label>
+    <div class="layui-input-block">
+      <input type="remarks" name="remarks" class="layui-input"
+      id="brief" placeholder="备注">
+    </div>
+  </div>
+
+</div>
+
+<div class="layui-form-item">
+ <div class="layui-input-block submit_btn">
+  <input id="addReset" type="reset" style="display: none" value="这个是Form清除" />
+  <button type="submit" class="layui-btn layui-btn-success">保存</button>
+</div>
+</div>
+
+
+
+</form>
+{/block}
+
+
+{block name='js'}
+<script type="text/javascript">
+	
+  $(function(){
+    var options = {
+              type:'post',           //post提交
+              //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+              dataType:"json",        //json格式
+              data:{},    //如果需要提交附加参数，视情况添加
+              clearForm: false,        //成功提交后，清除所有表单元素的值
+              resetForm: false,        //成功提交后，重置所有表单元素的值
+              cache:false,
+              async:false,          //同步返回
+              success:function(data){
+                if(data.code==0){
+                  layer.msg(data.msg);
+                }else{
+                  layer.msg(data.msg,{icon:1,time:500},function(){
+                    $("#reset").click();
+                    lotus_close();
+                    parent.location.reload();
+                  });
+                }
+                  //服务器端返回处理逻辑
+                },
+                error:function(XmlHttpRequest,textStatus,errorThrown){
+                  layer.msg('操作失败:服务器处理失败');
+                }
+              };
+              layui.use('form', function(){
+                var form = layui.form;
+                $('#mainForm').ajaxForm(options).submit(function(data){});
+              });
+
+            })
+      // });
+    </script>
+    {/block}
+
+    

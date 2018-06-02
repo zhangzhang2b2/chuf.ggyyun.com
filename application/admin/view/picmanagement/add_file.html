@@ -1,0 +1,290 @@
+
+{block name='content'}
+<!--图片上传 webuploads -->
+<link rel="stylesheet" href="__common__/css/bootstrap.min.css">
+<link rel="stylesheet" href="__common__/css/webuploader.css">
+<link rel="stylesheet" href="__common__/css/uploadstyle.css">
+<style>
+.demo{min-width:360px;margin:30px auto;padding:10px 20px}
+.demo h3{line-height:40px; font-weight: bold;}
+.file-item{float: left; position: relative; height: 100px;/*overflow: hidden;*/font-size: 14px;}
+.file-item .info{    
+  font-size: 14px;
+  overflow: hidden;
+  height: 25px;
+  line-height: 25px;
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  background: rgba(25, 21, 21, 0.5);
+  width: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;}
+  .uploader-list{width: 100%; overflow: hidden;}
+  .state{    
+    font-size: 14px;
+    position: absolute;
+    top: 0;
+    color: #fff;
+    background: #7b5757;
+    background: rgba(25, 21, 21, 0.5);
+  }
+  .stateerro{
+    background: red;
+  }
+  .sdel{
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    background: #8b8989;
+  }
+  .asdel:hover .sdel{
+    color: red;
+    cursor:pointer;
+  }
+</style>
+
+<div class="form-group" style="margin: 50px;">
+  <label class="layui-form-label">
+    图片上传
+  </label>
+  <div class="layui-input-block">
+
+    <div id="uploadfile">
+      <!--用来存放文件信息-->
+      <!-- <div id="thelist" class="uploader-list"></div> -->
+      <div id="fileList1" class="uploader-list"></div>
+      <div class="form-group form-inline" id="dndArea">
+        <div  class="pickers" onclick="add('fileList1','file1','all1')"  style="float:left;">选择文件</div> &nbsp;     
+        <button id="ctlBtn" class="btn btn-default reset" style="padding:8px 15px;">开始上传</button>
+      </div>
+    </div>
+    <input type="text" name="file1" id="file1" value="" hidden="">
+  </div>
+</div>
+
+<div style="clear: both;"></div>
+{/block}
+
+<script src="__AdminLTE__/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="__module__/layui/layui.js"></script>
+<script src="__adminJs__/admin.js"></script>
+<!--图片上传 自己写的js -->
+<script type="text/javascript" src="__common__/js/jquery.min.js"></script>
+<script type="text/javascript" src="__common__/js/webuploader.min.js"></script>
+<script type="text/javascript" src="__common__/js/upload.js"></script>
+  <!--图片上传 自己写的js -->
+<script type="text/javascript" src="__common__/js/webuploads.js"></script> 
+{block name="js"}
+<script>
+  //
+  var filelistid = '';
+  var inputid = '';
+
+  //定义，取文件长度
+  var countfile = new Array();
+  var filelength = '';
+  var okfile = new Array();
+
+  function add(a,b,c){
+       filelistid = a;  //给回上面全局
+       inputid = b;
+       var datas ={"a":filelistid,"b":inputid};
+       return datas;
+  };
+
+  $(function(){
+    var $list = $('#thelist'), //返回的信息
+    $btn = $('#ctlBtn');
+
+    var uploader = WebUploader.create({
+      resize: true, // 不压缩image      
+      swf: '__common__/js/Uploader.swf', // swf文件路径
+      server: "uplodas", // 文件接收服务端。
+      pick:'.pickers', // 选择文件的按钮。可选
+      chunked: true, //是否要分片处理大文件上传
+      chunkSize:2*1024*1024, //分片上传，每片2M，默认是5M
+      auto: false, //选择文件后是否自动上传
+      threads:1,//上传并发数。允许同时最大上传进程数,为了保证文件上传顺序  
+      chunkRetry : 2, //如果某个分片由于网络问题出错，允许自动重传次数
+      runtimeOrder: 'html5,flash',
+      accept: {
+        title: 'file',
+        extensions: 'gif,png,jpg,jpeg',//zip,rar,mp3,mp4,
+        mimeTypes: 'image/*'
+      }
+    });
+    //compress: null;//// 初始状态图片上传前不会压缩 compressSize : 0//单位字节，如果图片大小小于此值，不会采用压缩 fileSingleSizeLimit //单张大小 
+     // fileSizeLimit总限制大小    // fileNumLimit:2, 上传张数
+
+    // 当有文件被添加进队列的时候
+    uploader.on( 'fileQueued', function( file ) {
+
+      $list.append( '<div id="' + file.id + '" class="item">' +
+        '<h4 class="info">' + file.name + '</h4>' +
+        '<p class="state">等待上传...</p>' +
+        '</div>' );
+    });
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+      var $li = $( '#'+file.id ),
+      $percent = $li.find('.progress .progress-bar');
+        // 避免重复创建
+        if ( !$percent.length ) {
+          $percent = $('<div class="progress progress-striped active">' +
+            '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+            '</div>' +
+            '</div>').appendTo( $li ).find('.progress-bar');
+        }
+        $li.find('p.state').text('上传中');
+        $percent.css( 'width', percentage * 100 + '%' );
+      });
+    // 文件上传成功
+    uploader.on( 'uploadSuccess', function( file, response) {
+        //console.log(response); //这里可以得到后台返回的数据
+        var fileid = add(filelistid,inputid); //调用上面的方法 //josn 格式
+
+        $( '#'+file.id ).find('p.state').text('已上传');
+        $( '#'+file.id ).find('div.state').text('已上传');
+        
+      });
+
+    // 文件上传失败，显示上传出错
+    uploader.on( 'uploadError', function( file ) {
+      $( '#'+file.id ).find('p.state').text('上传出错');
+      $( '#'+file.id ).find('div.state').text('上传出错');
+      $( '#'+file.id ).addClass('stateerro');
+    });
+
+    // 完成上传完
+    uploader.on( 'uploadComplete', function( file ) {
+      $( '#'+file.id ).find('.progress').fadeOut();
+
+      //文件总数，用来判断关闭窗口
+      okfile.push(file.id);
+      var okfilelength = okfile.length;
+
+      if(filelength==okfilelength){
+        layer.msg('上传成功',{icon:1,time:800},function(){
+          $(".reset").click();
+          lotus_close();
+          parent.location.reload();
+        });
+      }
+
+    });
+
+   
+
+    $btn.on('click', function () {
+      if ($(this).hasClass('disabled')) {
+        return false;
+      }
+      uploader.upload();
+        // if (state === 'ready') {
+        //     uploader.upload();
+        // } else if (state === 'paused') {
+        //     uploader.upload();
+        // } else if (state === 'uploading') {
+        //     uploader.stop();
+        // }
+      });
+
+    // 当有文件添加进来的时候
+
+    uploader.on( 'fileQueued', function( file ) {
+
+        var fileid = add(filelistid,inputid); //调用上面的方法
+        
+        //文件总数，用来判断关闭窗口
+        countfile.push(file.id);
+        filelength  = countfile.length;
+      
+        //josn 格式
+        var $list = $("#"+fileid.a), 
+        $li = $(
+          '<div id="' + file.id + '" class="file-item thumbnail">' +
+          '<img>' +
+          '<div class="info">' + file.name + '</div>' +
+          '<div class="state">等待上传...</div>' +
+          '<a class="asdel">'+
+          '<span class="sdel">删除</span>' +
+          '</a>'+
+          '</div>'
+          ),
+
+        $img = $li.find('img');
+
+        // 创建缩略图
+        // 如果为非图片文件，可以不用调用此方法。
+        // thumbnailWidth x thumbnailHeight 为 100 x 100
+        uploader.makeThumb( file, function( error, src ) {
+          if ( error ) {
+            $img.replaceWith('<span>不能预览</span>');
+            return;
+          }
+
+          $img.attr( 'src', src );
+        }, 100, 100 );
+
+        //上传点击删除
+        $li.on( 'click', 'span', function() {
+          var $li = $('#'+file.id);
+          delete $list[ file.id ];
+          $li.off().find('.file-item').off().end().remove();
+          uploader.removeFile( file ); //删除文件  
+          filelength = filelength-1; //删除文件总数减1
+        });
+
+        // $list为容器jQuery实例
+        $list.append( $li );
+
+    });
+
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+      var $li = $( '#'+file.id ),
+      $percent = $li.find('.progress span');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+          $percent = $('<p class="progress"><span></span></p>')
+          .appendTo( $li )
+          .find('span');
+        }
+
+        $percent.css( 'width', percentage * 100 + '%' );
+      });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on( 'uploadSuccess', function( file ) {
+      $( '#'+file.id ).addClass('upload-state-done');
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader.on( 'uploadError', function( file ) {
+      var $li = $( '#'+file.id ),
+      $error = $li.find('div.error');
+
+        // 避免重复创建
+        if ( !$error.length ) {
+          $error = $('<div class="error"></div>').appendTo( $li );
+        }
+
+        $error.text('上传失败');
+      });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on( 'uploadComplete', function( file ) {
+      $( '#'+file.id ).find('.progress').remove();
+    });
+
+
+  });
+
+
+</script>
+
+{/block}

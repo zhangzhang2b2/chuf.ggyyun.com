@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="__module__/layui/css/layui.css">
+
+  <!--图片上传 webuploads -->
+  <!-- <link rel="stylesheet" href="__common__/css/bootstrap.min.css">
+  <link rel="stylesheet" href="__common__/css/webuploader.css">
+  <link rel="stylesheet" href="__common__/css/uploadstyle.css"> -->
+
+  {block name='css'}
+  <style type="text/css">
+  .btn200{
+    width: 200px;
+  }
+  .btncent{
+    text-align: center;margin-top: 60px;margin-left: 0;margin-bottom: 60px;
+  }
+
+  /*图片管理器s*/
+  .picadd{
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 12px;background: #FF5823;color: #fff;
+    margin-left: 15%;
+  }
+
+  .fileidarr{
+    float: left;
+    position: relative;
+    border: 6px solid #fff;
+    border-radius: 3px;
+    margin: 2px;
+  }
+
+  .del{
+    display: none;
+    position: absolute;
+    top: 0;
+    height: 100px;
+    line-height: 100px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: rgba(14, 8, 8, 0.39);
+  }
+  a:hover .del{
+    display: block;
+  }
+  /*图片管理器e*/
+  .layui-form-pane .layui-form-label{
+    width: 15%;
+  }
+  .layui-form-pane .layui-input-block{
+    margin-left: 0;
+  }
+  .layui-input, .layui-textarea{
+    width: 85%;
+  }
+</style>
+{/block}
+</head>
+<body>
+  <div class="layui-container" style="width: 100%;">
+    <div class="layui-row">
+      <div class="layui-col-md" style="margin-top: 20px;">
+        {block name='content'}{/block}
+      </div>
+    </div>
+  </div>  
+</body>
+<script src="__AdminLTE__/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="__module__/layui/layui.js"></script>
+<script src="__adminJs__/jquery.form.js"></script>
+<script src="__adminJs__/admin.js"></script>
+<!-- 弹出添加、修改提示 -->
+<script src="__common__/js/showprompt.js"></script>
+
+<!--ueditor-->
+<script type="text/javascript" charset="utf-8" src="__ueditor__/ueditor.config.js?v=1"></script>
+<script type="text/javascript" charset="utf-8" src="__ueditor__/ueditor.all.min.js"></script>
+<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+<script type="text/javascript" charset="utf-8" src="__ueditor__/lang/zh-cn/zh-cn.js"></script>
+
+
+<!--图片上传 自己写的js -->
+<!-- <script type="text/javascript" src="__common__/js/jquery.min.js"></script> -->
+<script type="text/javascript" src="__common__/js/webuploader.min.js"></script>
+<script type="text/javascript" src="__common__/js/upload.js"></script>
+<!--图片上传 自己写的js -->
+<script type="text/javascript" src="__common__/js/webuploads.js"></script> 
+
+<!--百度图表 ECharts-->
+<script src="__common__/js/echarts.js"></script>
+<script src="__common__/js/wonderland.js"></script>
+
+{block name='js'}{/block}
+</html>

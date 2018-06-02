@@ -1,0 +1,346 @@
+{extend name='public/base'}
+{block name='content'}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        {$item['item1']}
+        <small>{$item['item2']}</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> {$item['item1']}</a></li>
+        <li class="active">{$item['item2']}</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">操作栏</h3>
+        </div>
+        <div class="panel-body">
+              <button data-toggle="modal" onclick="lotus_show('新增管理员','add_user',500,450)" class="btn  btn-success  btn-sm btn-small ">新增管理员</button>
+              <!-- <button class="btn  btn-danger btn-small">删除</button> -->
+        </div>
+     </div>
+
+      <div class="row" >
+        <div class="col-xs-12">
+          <!-- /.box -->
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">列表</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                  <th>用户名</th>
+                  <th>邮箱</th>
+                  <th>电话号码</th>
+                  <th>创建时间</th>
+                  <th>最后登录IP</th>
+                  <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {volist name='list' id='vo'}
+                  <tr style="">
+                    <td>{$vo.username}</td>
+                    <td>{$vo.email}</td>
+                    <td>{$vo.mobile}</td>
+                    <td>{$vo.create_time}</td>
+                    <td>{$vo.last_login_ip}</td>
+                    <td>
+                        <button onclick="lotus_show('编辑管理员','edit_user.html?id={$vo.id}',500,450)" class="btn btn-xs  btn-success btn-small">编辑</button>
+                        <button onclick='delete_user({$vo.id})' class="btn btn-xs  btn-danger btn-small">删除</button>
+                    </td>
+                  </tr>
+                  {/volist}
+
+                </tbody>
+
+               <!--  <tfoot>
+                <tr>
+                  <th>Rendering engine</th>
+                  <th>Browser</th>
+                  <th>Platform(s)</th>
+                  <th>Engine version</th>
+                  <th>CSS grade</th>
+                </tr>
+                </tfoot> -->
+              </table>
+
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+
+
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新增用户</h4>
+            </div>
+            <div class="modal-body">
+                  <form class="form-horizontal" id='addForm' action="addUser">
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">角色</label>
+                            <div class="col-sm-10">
+                                <select id="group_id" name="group_id" class="form-control">
+                                    <option value="">请选择用户组</option>
+                                    {volist name='role' id='vo'}
+                                        <option value="{$vo.id}">{$vo.title}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">用户</label>
+                            <div class="col-sm-10">
+                              <input type="username" name="username"  class="form-control" id="username" placeholder="用户名">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10">
+                              <input type="password" name="password" class="form-control" id="password" placeholder="请输入密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">确认</label>
+                            <div class="col-sm-10">
+                              <input name="check_password" type="password" class="form-control" id="check_password" placeholder="确认密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">手机</label>
+                            <div class="col-sm-10">
+                              <input name="mobile" type="text" class="form-control" id="mobile" placeholder="请输入手机号码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-10">
+                              <input type="email" name="email" class="form-control"
+                              id="email" placeholder="请输入电子邮箱">
+                            </div>
+                        </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <input id="addReset" type="reset" class="hidden" value="这个是Form清除" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+
+                </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!-- 按钮触发模态框 -->
+<!-- <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">开始演示模态框</button> -->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">编辑用户</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal" id='editForm' action="editUser">
+
+
+                    <input type="text" class="hidden"  name="id"  class="form-control" >
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">角色</label>
+                            <div class="col-sm-10">
+                                <select  name="group_id" class="form-control">
+                                    <option value="">请选择用户组</option>
+                                    {volist name='role' id='vo'}
+                                        <option value="{$vo.id}">{$vo.title}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">用户</label>
+                            <div class="col-sm-10">
+
+                              <input type="text" name="username"  class="form-control" placeholder="用户名">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10">
+                              <input id='password2' type="password" name="password" class="form-control"  placeholder="(如需修改密码)请输入密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">确认</label>
+                            <div class="col-sm-10">
+                              <input id='check_password2' name="check_password" type="password" class="form-control" id="check_password" placeholder="确认密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">手机</label>
+                            <div class="col-sm-10">
+                              <input name="mobile" type="text" class="form-control" placeholder="请输入手机号码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-10">
+                              <input type="email" name="email" class="form-control"  placeholder="请输入电子邮箱">
+                            </div>
+                        </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <input id="editReset" type="reset" class="hidden" value="这个是Form清除" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+
+                </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+{/block}
+
+
+{block name='script'}
+<script>
+  //编辑框打开方法，并且填充数据
+  function openEdit(id){
+    $.ajax({
+        url: "{:url('admin/AdminUser/get_edit_data')}",
+        type: 'post',
+        dataType: 'json',
+        data: {id:id},
+    })
+    .done(function(data){
+        //加载层
+         var index = layer.load(0, {shade: true,offset:'m'}); //0代表加载的风格，支持0-2
+        //打开模态框
+        $('#editModal').modal('show');
+        //填充数据
+        $("#editForm").children('input[name=id]').val(data.id);
+        $("#editForm").find('select[name=group_id]').val(data.group_id);
+        $("#editForm").children().find('input[name=username]').val(data.username);
+        $("#editForm").children().find('input[name=mobile]').val(data.mobile);
+        $("#editForm").children().find('input[name=email]').val(data.email);
+    })
+  }
+
+  //增加数据
+  $(function (){
+        $('#example1').DataTable({
+          'paging'      : true,
+          'lengthChange': true,
+          'searching'   : true,
+          'ordering'    : false,
+          'info'        : true,
+          'autoWidth'   : true
+        });
+        var options = {
+              type:'post',//post提交
+              //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+              dataType:"json",        //json格式
+              data:{},    //如果需要提交附加参数，视情况添加
+              clearForm: false,        //成功提交后，清除所有表单元素的值
+              resetForm: false,        //成功提交后，重置所有表单元素的值
+              cache:false,
+              async:false,          //同步返回
+              success:function(data){
+                    if(data.code==0){
+                        layer.msg(data.msg,{icon:2,offset:'m',time:1000});
+                    }else{
+                        layer.msg(data.msg,{icon:1,offset:'m',time:1500},function(){
+                             location.reload();
+                        });
+                    }
+                  //服务器端返回处理逻辑
+                },
+                error:function(XmlHttpRequest,textStatus,errorThrown){
+                    layer.msg('操作失败:服务器处理失败');
+              }
+            };
+        //提交表单
+        $('#addForm').ajaxForm(options).submit(function(data){
+                console.log(data);
+        });
+        //编辑表单
+        $('#editForm').ajaxForm(options).submit(function(data){
+            // $('#editReset').click();
+        });
+  })
+    //新增用户的模态框数据清除
+    $("#addModal,#editModal").on('hide.bs.modal',function(){
+        $('#addReset').click();
+    });
+    //加载缓冲动画
+    $("#addModal,#editModal").on('show.bs.modal',function(){
+         layer.closeAll();
+    });
+
+
+    //删除用户
+    function delete_user(id){
+       layer.confirm('真的删除行么', function(index){
+            $.ajax({
+              url: '{:url("merchant/admin_user/delete_user")}',
+              type: 'get',
+              dataType: 'json',
+              data: {id:id},
+          })
+          .done(function(data){
+              //回调提示
+              if(data.code==0){
+                      layer.msg(data.msg,{icon:2,time:1000});
+                  }else{
+                      layer.msg(data.msg,{icon:1,time:1500},function(){
+                           location.reload();
+                      });
+              }
+          })
+
+
+       })
+
+    }
+
+
+
+</script>
+{/block}

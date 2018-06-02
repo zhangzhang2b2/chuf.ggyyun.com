@@ -1,0 +1,148 @@
+{extend name='public/base'} {block name='content'}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    {$item['item1']}
+    <small>{$item['item2']}</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li>
+      <a href="#">
+        <i class="fa fa-dashboard"></i> {$item['item1']}</a>
+    </li>
+    <li class="active">{$item['item2']}</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <!-- <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">搜索栏</h3>
+    </div>
+
+    <form class="form-horizontal layui-form" action="{:url('admin/other/index')}" method="get">
+      <div class="box-body" style="padding: 15px;">
+        <div>
+          <div class="col-sm-2">
+            <select name="status">
+              <option value="">所有位置</option>
+              <option value="0" {eq name="area|default=''" value="1" }selected{/eq}>首页轮播图</option>
+              <option value="1" {eq name="area|default=''" value="0" }selected{/eq}>诊所轮播图</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <select name="status">
+              <option value="">所有状态</option>
+              <option value="1" {eq name="status|default=''" value="1" }selected{/eq}>展示</option>
+              <option value="0" {eq name="status|default=''" value="0" }selected{/eq}>隐藏</option>
+            </select>
+          </div>
+
+          <div class="col-sm-2">
+            <input type="text" name="name" value="{$name|default=''}" class="form-control" placeholder="请输入商品名称/编号">
+          </div>
+
+          <div class="col-sm-1">
+            <button type="submit" class="layui-btn layui-btn-sm layui-btn-warm">搜索</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div> -->
+
+  <blockquote class="layui-elem-quote layui-text clw">
+      <!-- <button data-toggle="modal" onclick="lotus_show('添加','add_other.html',0,0)" class="btn  btn-success  btn-sm btn-small ">添加</button> -->
+      <button onclick="javascript:location.reload()" class="btn btn-info btn-sm">刷新</button>
+  </blockquote>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <!-- /.box -->
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">列表</h3>
+          <span class="total">总共&nbsp;{$list->total()}&nbsp;条记录</span>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <table class="layui-table" lay-data="{height: '', cellMinWidth: 80,url:'', page:false,limit:20,id:'id'}" lay-filter="goodslist">
+            <thead>
+              <tr>
+                <!-- <th lay-data="{type:'checkbox'}"></th> -->
+                <!-- <th lay-data="{field:'id', sort: true}">编号</th> -->
+                <th lay-data="{field:'area'}">位置</th>
+                <th lay-data="{field:'files'}">图片(双击图片放大查看)</th>
+                <!-- <th lay-data="{field:'status'}">状态</th> -->
+                <th lay-data="{field:'update_time',width:200}">操作</th>
+                <!-- toolbar: '#barDemo' -->
+              </tr>
+            </thead>
+            <tbody>
+              {volist name='list' id='vo'}
+              <tr>
+                <!-- <td>
+                  <div class="layui-form-checkbox" lay-skin="primary" data-id='{$vo.id}'>
+                    <i class="layui-icon">&#xe605;</i>
+                  </div>
+                </td> -->
+                <!-- <td>{$vo.id}</td> -->
+                <td>
+                    {switch name="$vo.area"} {case value="0"}首页轮播图{/case} {case value="1"}诊所轮播图{/case} {default /}无 {/switch}
+                  </td>
+                <td>{:file_show_pic($vo.files)}</td><!-- file_show_pic方法调用common.php里的方法 -->
+                <!-- <td>
+                  {eq name="vo.status" value='1' }
+                  <button type="button" onClick="status_row('{$vo.id}','{$vo.status}','status','commodity','status_row')" class="btn btn-success btn-xs">展示</button>
+                  {else /}
+                  <button type="button" onClick="status_row('{$vo.id}','{$vo.status}','status','commodity','status_row')" class="btn btn-warning btn-xs">隐藏</button>
+                  {/eq}
+                </td> -->
+                <td>
+                  <button onclick="lotus_show('编辑','edit_other.html?id={$vo.id}',0,0)" class="btn btn-xs  btn-success btn-small">编辑</button>
+                  <!-- <button onclick="delete_row('{$vo.id}','commodity','delete_row')" class="btn btn-xs  btn-danger btn-small">删除</button> -->
+                </td>
+              </tr>
+              {/volist}
+
+            </tbody>
+          </table>
+          <!-- <div class="btn_all">
+          <button class="btn  btn-danger btn-sm" onclick="delete_all('delete_row','commodity')">批量删除</button>
+          <button class="btn btn-success btn-sm" onclick="status_all('0','status','status_row','commodity')">上架</button>
+          <button class="btn btn-warning btn-sm" onclick="status_all('1','status','status_row','commodity')">下架</button>
+        </div> -->
+          <div class="page page_right">
+            <div>
+              {$list->render()}
+            </div>
+          </div>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
+
+</section>
+<!-- /.content -->
+{/block}
+
+<!-- 引入js 必须要这两个 2018年1月22日10:06:35-->
+{block name='js'}
+<script>
+  layui.use('table', function () {
+    var table = layui.table;
+    //监听表格复选框选择
+    table.on('checkbox(demo)', function (obj) {
+      console.log(obj)
+    });
+
+
+  });
+</script>
+{/block} {block name='script'} {/block}

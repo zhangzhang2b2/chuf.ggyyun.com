@@ -1,0 +1,269 @@
+
+{block name='content'}
+<link rel="stylesheet" type="text/css" href="__module__/layui/css/layui.css">
+
+ <!--图片上传 webuploads -->
+ <link rel="stylesheet" href="__common__/css/bootstrap.min.css">
+ <link rel="stylesheet" href="__common__/css/webuploader.css">
+ <link rel="stylesheet" href="__common__/css/uploadstyle.css">
+<style type="text/css">
+.imgDiv {
+ display: inline-block;
+ position: relative;
+}
+
+.delete {
+ position: absolute;
+ top: 0px;
+ right: 0px;
+ width: 20px;
+ height: 20px;
+ display: none;
+}
+.chek{
+ display: block;
+ position: absolute;
+ bottom: 0;
+ left: 50px;
+}
+.radio{
+ width: 20px;
+ height: 20px;
+}
+.filewh{
+ width: 120px;height: 126px;float: left;text-align: center;line-height: 126px;margin-top: 10px;
+}
+
+</style>
+
+<div id="dialog-imageUploader"> 
+ <!-- /.box-header --> 
+ <div class="box-body">
+   <div  style="border-bottom:1px solid #f4f4f4;">
+             <div class="tj_left" style="margin: 10px 30px;"> 
+              <button class="btn btn-success btn-sm"  id="transmit" >选择保存</button>
+              <button class="btn  btn-warning  btn-sm" onclick="lotus_show('添加','showAddfile.html',0,0)" ><i class="layui-icon" style="font-size: 10px; ">&#xe61f;</i>上传图片</button> 
+              <!-- <div id="transmit">我是子页面</div> -->
+            </div>
+          </div>
+
+          <div id="dialog-content">
+           {volist name="filelist" id="file"}
+           <div class="margin imgDiv filewh">
+             <img class="img-thumbnail" style="max-width: 100px; max-height: 100px;"  
+             src="{$file.url}">
+             <!-- dshow -->
+           <div class="layui-form-checkbox tips sort chek dshowradio" lay-skin="primary" data-sort=''  data-type='0' id="{$file.id}" data-id='{$file.id}' data-fileurl="{$file.url}" onclick="addpush('{$file.id}')" >'> </div>
+         
+           </div>
+           {/volist}
+
+         </div>
+         <!-- <input type="hidden" name="tips" id='' /> -->
+       </div>
+       <!-- /.box-body -->
+       <div class="box-footer clearfix">
+         {$page}
+       </div>
+     </div>
+{/block}
+
+{block name="js"}
+<script src="__AdminLTE__/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="__module__/layui/layui.js"></script>
+<script src="__adminJs__/jquery.form.js"></script>
+<script src="__adminJs__/admin.js"></script>
+
+<!-- 2018年1月16日17:31:25 -->
+<script type="text/javascript" src="__common__/js/piccheckboxadd.js"></script>
+
+<script >
+
+$(function(){
+     //单张选择
+     // console.log('单张选择');
+     var dshow = parent.$("#dshow").val();
+     // console.log(dshow,'---');
+     if(dshow==1){
+       $('.dshowradio').append( '<input class="radio" type="radio" name="listradio" value="">');
+     }else{
+       $('.dshowradio').append('<i class="layui-icon" >&#xe605;</i>');
+     }
+
+   });
+
+//    //排序
+//    var count = 0;
+
+//    //我是子页面
+//    //注意：parent 是 JS 自带的全局对象，可用于操作父页面
+//    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+//    var fileid=parent.$("#parentIframe").val(); // 所有id
+//    var imgpath=parent.$("#imgurls").val(); //所有路径
+
+//    //单选或多选
+//    var dshow = parent.$("#dshow").val();
+//   console.log(dshow,'--');
+//    if(dshow=='radioshow'){
+//        $(function(){
+//            $("div").removeClass("dshow1");
+//        });
+//    }else{
+//      $(function(){
+//            $("div").removeClass("dshow");
+//        });
+//    }
+
+//    var files = new Array();  //所有
+//    var filesurl = new Array(); //单次选择路径
+//    var filesone = new Array();//单次 id
+
+//    var filesurls = new Array(); //所有路径
+
+//    //判断添加
+//    if(fileid && imgpath){
+//      files.push(fileid); //拿原来的id
+//      filesurls.push(imgpath); //所有路径
+//    }
+
+//    //给父页面传值
+//    $('#transmit').on('click', function(){
+//      var datas =$('.tips');
+//      var list=new Array();
+//      var sortarr =new Array();
+
+
+//  if(dshow=='radioshow'){
+//      var onefileid = '';
+//      var onefileurl = '';
+
+// console.log(onefileid,'====',onefileurl);
+
+//      files.push(onefileid); 
+//      filesone.push(onefileid);
+//      filesurl.push(onefileurl);
+//      filesurls.push(onefileurl);
+
+//  }else{
+
+//      for (var i = 0; i <datas.length; i++) {
+//        var types=$(datas[i]).attr('data-type');
+//         if(types==0){
+//           console.log(0)
+//         }else{
+//           var id=$(datas[i]).attr('data-id'); //文件id
+//           var sortid=$(datas[i]).attr('data-sort');  //排序id
+//           var fileurl=$(datas[i]).attr('data-fileurl');  //文件路径
+
+//           list.push(id); 
+//           var ok = {'sortid':sortid,'fileid':id,'fileurl':fileurl};
+//           sortarr.push(ok);
+//         }
+//      }
+
+//      var listfile = sortarr.sort(sequence); //排序
+//      //listfile 是一个数组
+//        for(var k = 0; k<listfile.length;k++){
+//            files.push(listfile[k]["fileid"]); 
+//            filesone.push(listfile[k]["fileid"]);
+//            filesurl.push(listfile[k]["fileurl"]);
+//            filesurls.push(listfile[k]["fileurl"]);
+//        }
+
+//  }
+
+//      //传值给父页面
+//      parent.$('#parentIframe').val(files);
+//      parent.$('#parentIframe1').val(filesone);
+//      parent.$('#imgurl').val(filesurl);
+//      parent.$('#imgurls').val(filesurls);
+//       // parent.layer.tips('Look here', '#parentIframe', {time: 5000});
+
+//       //调用父页面方法
+//       parent.getMethodValue();
+
+//       //关闭窗口
+//       parent.layer.close(index);
+//     });
+
+//  //写入路径并排序
+//  function addpush(obj){
+//    console.log(obj);
+//    var id = '#'+obj;
+//    var types=$(id).attr('data-type');
+
+//        //排序
+//        var i = count++;
+//        //console.log(i);
+
+//        //console.log(types , ' ---','#'+obj);
+//        if(types==0){
+//          var types=$(id).attr('data-type',1);
+//          var types=$(id).attr('data-sort',i);
+//        }else{
+//         var types=$(id).attr('data-type',0);
+//         var types=$(id).attr('data-sort','');
+//       }
+//  }
+
+//  //单选
+//  function addradio(obj){
+//     console.log(obj);
+//    var id = '#'+obj;
+//    var types=$(id).attr('data-types',1);
+//  }
+
+
+//     //测试 
+//     function addAll () {
+//      var datas =$('.tips');
+//      var list=new Array();
+//      var sortarr =new Array();
+
+//      for (var i = 0; i <datas.length; i++) {
+//       var types=$(datas[i]).attr('data-type');
+//       if(types==0){
+//         console.log(0)
+//       }else{
+//         var id=$(datas[i]).attr('data-id'); //文件id
+//         var sortid=$(datas[i]).attr('data-sort');  //排序id
+//         var fileurl=$(datas[i]).attr('data-fileurl');  //文件路径
+
+//         list.push(id); 
+//         var ok = {'sortid':sortid,'fileid':id,'fileurl':fileurl};
+//         sortarr.push(ok);
+//       }
+      
+//     }
+
+//      var listfile = sortarr.sort(sequence); //排序
+
+//      var files = new Array();
+//      var filesurl = new Array();
+//      //listfile 是一个数组
+//      for(var k = 0; k<listfile.length;k++){
+//        files.push(listfile[k]["fileid"]);
+//        filesurl.push(listfile[k]["fileurl"]);
+//      }
+
+//      console.log(files,'///',filesurl);
+     
+//      console.log(list,'....')
+     
+//      console.log(listfile,'...??')
+
+
+//    }
+
+//    //数字排序问题
+//    function sequence(a,b){
+//     return a.sortid - b.sortid;
+//   }
+//    //Array.union(a,b) 使用方法
+//    //并集
+//    // Array.union = function(a, b){ 
+//    //   return a.concat(b).uniquelize(); 
+//    // }; 
+
+</script>
+{/block}

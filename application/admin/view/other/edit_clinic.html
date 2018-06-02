@@ -1,0 +1,137 @@
+{extend name='public/modal'}
+{block name='content'}
+<style type="text/css">
+    .submit_btn{
+         float: center;
+  }
+</style>
+<form action="edit_clinic" class="layui-form layui-form-pane" id="mainForm" method="post">
+
+    <form class="form-horizontal" id='addForm' action="addClinic">
+                        
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">用户id</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="user_id" value="{$data.user_id}" class="layui-input" id="user_id" placeholder="用户id">
+                            </div>
+                        </div>
+
+
+                       <div class="layui-form-item">
+                            <label  class="layui-form-label">诊所名称</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="clinicname" value="{$data.clinic}" class="layui-input" id="clinic" placeholder="诊所名称">
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="name" value="{$data.name}" class="layui-input" id="name" placeholder="姓名">
+                            </div>
+                        </div>
+                       
+
+                       <div class="layui-form-item">
+                            <label  class="layui-form-label">性别</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="sex" value="{$data.sex}" class="layui-input" id="sex" placeholder="性别">
+                            </div>
+                        </div>
+
+                        <!-- <div class="layui-form-item">
+                            <label  class="layui-form-label">联系电话</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="tel" value="{$data.tel}" class="layui-input" id="tel" placeholder="联系电话">
+                            </div>
+                        </div> -->
+
+                        <div class="layui-form-item">
+                          <div class="layui-inline">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-inline">
+                              <input type="tel" name="tel" lay-verify="required|tel" autocomplete="off" class="layui-input">
+                            </div>
+                          </div>
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">身份证</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="card_id" value="{$data.card_id}" class="layui-input" id="card_id" autocomplete="off" placeholder="身份证">
+                            </div>
+                        </div>                       
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">详细地址</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="address" value="{$data.address}" class="layui-input" id="address" placeholder="详细地址">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">省</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="province" value="{$data.province}" class="layui-input" id="province" placeholder="省">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">市</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="city" value="{$data.city}" class="layui-input" id="city" placeholder="市">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">区</label>
+                            <div class="layui-input-block">
+                              <input type="text" name="area" value="{$data.area}" class="layui-input" id="area" placeholder="区">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">医疗机构许可证</label>
+                            <div class="layui-input-block">
+                              <img src="{$data.card_img}" name="card_img">
+                            </div>
+                        </div>                        
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">门头照片图集</label>
+                            <div class="layui-input-block">
+                               <!-- 循坏输出图片--> 
+                              {volist name="files" id="vo"}
+                              <img src="{$vo}" name="logo">
+                              {/volist}
+                            </div>
+                        </div>
+                        
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">简介</label>
+                            <div class="layui-input-block">
+                              <input name="abstract" value=""  type="text" class="layui-input" placeholder="请输入诊所简介">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label  class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                              <input name="remarks" type="text" class="layui-input" placeholder="备注">
+                            </div>
+                        </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <input id="editReset" type="reset" class="hidden" value="这个是Form清除" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary">111提交</button>
+                </div>
+
+                </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>

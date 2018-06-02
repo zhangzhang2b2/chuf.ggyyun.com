@@ -1,0 +1,102 @@
+{extend name='public/modal'}
+{block name='content'}
+<style type="text/css">
+  .submit_btn{
+   float: right;
+  }
+</style>
+<form  id="mainForm" class="layui-form layui-form-pane" method='post' action="add_menu">
+   <div class="layui-form-item">
+    <label class="layui-form-label">上级菜单</label>
+    <div class="layui-input-block">
+      <select name="pid" lay-verify="required" >
+        <option value="0">顶级菜单</option>
+        {volist name='top_menu' id='vo'}
+              <option value="{$vo.id}">{$vo.level-1|str_repeat='&nbsp;丨_ _ _',###}{$vo.title}</option>
+        {/volist}
+      </select>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">菜单名称</label>
+    <div class="layui-input-block">
+      <input type="text" name="title" required  lay-verify="required" placeholder="请输入菜单名称" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+
+    <div class="layui-form-item">
+    <label class="layui-form-label">控制器</label>
+    <div class="layui-input-block">
+      <input type="text" name="name" required  lay-verify="required" placeholder="请输入控制器" autocomplete="off" class="layui-input">
+    </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label"><a style="color:#green" target="_target" href="http://fontawesome.dashgame.com/">图标(点)</a></label>
+      <div class="layui-input-block">
+        <input type="text" value="fa fa-circle-o"  name="icon"    placeholder="请输入图标" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">排序值</label>
+      <div class="layui-input-block">
+        <input type="text" name="sort"  value="0"   placeholder="请输入排序值（越大越靠前）" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">状态</label>
+    <div class="layui-input-block">
+         <input type="radio" name="status" value="1" title="显示" checked>
+         <input type="radio" name="status" value="0" title="隐藏" >
+    </div>
+  </div>
+
+  <div class="" class="layui-form-item" >
+    <div class="layui-input-block submit_btn">
+      <button   class="layui-btn" lay-submit='' lay-filter="formDemo">提交</button>
+      <button style="display: none;"  type="reset" class=" layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+
+</form>
+{/block}
+{block name='js'}
+  <script type="text/javascript">
+      $(function(){
+        var options = {
+              type:'post',           //post提交
+              //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+              dataType:"json",        //json格式
+              data:{},    //如果需要提交附加参数，视情况添加
+              clearForm: false,        //成功提交后，清除所有表单元素的值
+              resetForm: false,        //成功提交后，重置所有表单元素的值
+              cache:false,
+              async:false,          //同步返回
+              success:function(data){
+                    if(data.code==0){
+                      layer.msg(data.msg);
+                    }else{
+                      layer.msg(data.msg,{icon:1,time:500},function(){
+                        $("#reset").click();
+                        lotus_close();
+                        parent.location.reload();
+                      });
+                    }
+                  //服务器端返回处理逻辑
+                },
+                error:function(XmlHttpRequest,textStatus,errorThrown){
+                  layer.msg('操作失败:服务器处理失败');
+              }
+            };
+          layui.use('form', function(){
+            var form = layui.form;
+            $('#mainForm').ajaxForm(options).submit(function(data){});
+          });
+
+        })
+      // });
+  </script>
+{/block}

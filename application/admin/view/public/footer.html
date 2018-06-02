@@ -1,0 +1,40 @@
+<!-- jQuery 3 -->
+<script src="__AdminLTE__/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="__AdminLTE__/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="__AdminLTE__/bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="__AdminLTE__/dist/js/adminlte.min.js"></script>
+<script src="__adminJs__/jquery.form.js"></script>
+<!-- DataTables -->
+<script src="__AdminLTE__/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="__AdminLTE__/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="__adminJs__/admin.js"></script>
+<script src="__module__/layer/layer.js"></script>
+<script type="text/javascript" src="__module__/layui/layui.js"></script>
+<!-- <script src="__AdminLTE__/dist/js/demo.js"></script> -->
+<script type="text/javascript">
+    // 定义全局JS变量
+    var GV = {
+        current_controller: "admin/{$controller|default=''}/{$action}",
+        base_url: "__STATIC__"
+    };
+    /**
+     * 后台侧边菜单选中状态
+     */
+    //移除激活
+    $('.treeview').removeClass('active').children('.li').removeClass('active');
+    // 一级菜单激活判断
+    $('.one_level').find('a[href*="' + GV.current_controller + '"]').parent().addClass('active').css({'border-top':'solid 1px #ccc','border-bottom':'solid 1px #ccc'});
+    // 一级菜单激活判断
+    $('.treeview-menu').find('a[href*="' + GV.current_controller + '"]').parent().addClass('active').parents('.treeview').addClass('active').css({'border-top':'solid 1px #ccc','border-bottom':'solid 1px #ccc'});
+    // 暂时没做三级菜单，有需要自行添加
+
+
+</script>
+
+<!--修改、删除方法 id,url 2018年1月22日10:00:57 -->
+<script src="__common__/js/indexall.js"></script>
+
+
