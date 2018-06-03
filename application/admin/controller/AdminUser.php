@@ -401,7 +401,7 @@ class AdminUser extends Main
     }
 
     
-        //编辑数据
+        //编辑子账号数据
         function edit_user_new($id){
             if(Request::instance()->isPost()){
                 

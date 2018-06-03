@@ -1,0 +1,188 @@
+{extend name='public/base'} {block name='content'}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        {$item['item1']}
+        <small>{$item['item2']}</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <i class="fa fa-dashboard"></i> {$item['item1']}</a>
+        </li>
+        <li class="active">{$item['item2']}</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">操作栏</h3>
+        </div>
+        <div class="panel-body">
+            <button data-toggle="modal" onclick="lotus_show('新增登记','add_register',1200,800)" class="btn  btn-success  btn-sm btn-small ">新增登记信息</button>
+            <!-- <button class="btn  btn-danger btn-small">删除</button> -->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- /.box -->
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">列表</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="example1" class="table table-bordered table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>卡号</th>
+                                <th>绑定手机</th>
+                                <th>姓名</th>
+                                <th>联系电话</th>
+                                <th>性别</th>
+                                <th>年龄</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {volist name='list' id='vo'}
+                            <tr>
+                                <td>{$vo.card_id}</td>
+                                <td>{$vo.phone_id}</td>
+                                <td>{$vo.name}</td>
+                                <td>{$vo.phone}</td>
+                                <td>
+                                    {switch name="$vo.sex" } {case value="1"}男{/case} {case value="2"}女{/case} {default /}不详 {/switch}
+                                </td>
+                                <td>{$vo.age}</td>
+                                <td>
+                                    {switch name="$vo.status" } {case value="1"}
+                                    <text style="color: green">激活</text>{/case} {default /}没激活 {/switch}
+                                </td>
+                                <td>
+                                    <button onclick="lotus_show('编辑登记','edit_register.html?id={$vo.id}',1200,800)" class="btn btn-xs  btn-success btn-small">编辑</button>
+                                    <button onclick='delete_register({$vo.id})' class="btn btn-xs  btn-danger btn-small">删除</button>
+                                </td>
+                            </tr>
+                            {/volist}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+
+{/block} {block name='script'}
+<script>
+    //增加数据
+    $(function () {
+        //表格功能
+        $('#example1').DataTable({
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': false,
+            'info': true,
+            'autoWidth': true
+        });
+
+
+        //JQuery里面的方法,ajaxSubmit来提交表单
+        var options = {
+            type: 'post', //post提交
+            //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+            dataType: "json", //json格式
+            data: {}, //如果需要提交附加参数，视情况添加
+            clearForm: false, //成功提交后，清除所有表单元素的值
+            resetForm: false, //成功提交后，重置所有表单元素的值
+            cache: false,
+            async: false, //同步返回
+            success: function (data) {
+                if (data.code == 0) {
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        offset: 'm',
+                        time: 1000
+                    });
+                } else {
+                    layer.msg(data.msg, {
+                        icon: 1,
+                        offset: 'm',
+                        time: 1500
+                    }, function () {
+                        location.reload();
+                    });
+                }
+                //服务器端返回处理逻辑
+            },
+            error: function (XmlHttpRequest, textStatus, errorThrown) {
+                layer.msg('操作失败:服务器处理失败');
+            }
+        };
+        //提交表单
+        $('#addForm').ajaxForm(options).submit(function (data) {
+            console.log(data);
+        });
+        //编辑表单
+        $('#editForm').ajaxForm(options).submit(function (data) {
+            console.log(data);
+            // $('#editReset').click();
+        });
+
+    })
+    //新增用户的模态框数据清除
+    $("#addModal,#editModal").on('hide.bs.modal', function () {
+        $('#addReset').click();
+    });
+    //加载缓冲动画
+    $("#addModal,#editModal").on('show.bs.modal', function () {
+        layer.closeAll();
+    });
+
+
+    //删除用户
+    function delete_register(id) {
+        layer.confirm('确定删除吗？', function (index) {
+            $.ajax({
+                    url: '{:url("merchant/Register/delete_register")}',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        id: id
+                    },
+                })
+                .done(function (data) {
+                    //回调提示
+                    if (data.code == 0) {
+                        layer.msg(data.msg, {
+                            icon: 2,
+                            time: 1000
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 1,
+                            time: 1500
+                        }, function () {
+                            location.reload();
+                        });
+                    }
+                })
+        })
+    }
+</script>
+{/block}
