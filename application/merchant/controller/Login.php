@@ -50,6 +50,7 @@ class Login extends Controller
 	//注销
 	function logout(){
 		session('uid',null);
+		session('pid',null);
 		session('username',null);
 		$this->redirect('merchant/login/index');
 	}
