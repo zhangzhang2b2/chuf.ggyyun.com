@@ -37,7 +37,15 @@ class Register extends Main
             // 使用model助手函数实例化User模型
             $model = model('Patient');
             //已存在的相同手机或卡号无法添加
-            $res =  $model->where('card_id',$post['card_id'])->whereOr('phone_id',$post['phone_id'])->find();
+            $whereCard='%%';
+            $wherePhone='%%';
+            if ($post['card_id'] != '') {
+                $whereCard=$post['card_id'];
+            }
+            if ($post['phone_id'] != '') {
+                $wherePhone=$post['phone_id'];
+            }
+            $res =  $model->where('card_id',$whereCard)->whereOr('phone_id',$wherePhone)->find();
             if ($res) {
                 $this->error('卡号和绑定手机已存在');
             }
@@ -68,6 +76,48 @@ class Register extends Main
      */
     public function record()
     {
-        return $this->fetch();
+        //查找登记的人员
+        $where=array();
+        if ($this->request->get()) {    //如果是搜索进来的
+            $get = $this->request->get();
+            if (isset($get['allwhere'])) {
+                if ($get['allwhere'] != '') {
+                    $where['card_id|phone_id|name']=array('like','%'.$get['allwhere'].'%');
+                }
+            }
+        }
+        $list = model('Patient')->where($where)->order('id desc')->paginate("16", false, ['query'=>request()->param()]);
+        $this->assign('list', $list);
+        //标题传值
+        $this->assign('item', ['item1'=>'记录','item2'=>'病患登记记录']);
+        return  $this->fetch();
     }
+
+    //编辑数据
+    public function edit_record($id)
+    {
+        
+        if (Request::instance()->isPost()) {
+            
+            $post = $this->request->post();
+
+                // 使用model助手函数实例化User模型
+                $model = model('Patient');
+                
+                if($post['status']){
+                $post['status']=$post['status']=='on'?1:0;
+                }
+
+                // 模型对象赋值
+                $model->save($post,['id' => $post['id']]);
+    
+                $this->success('添加成功');
+        
+        } else {
+            $data = model('Patient')->where('id', $id)->find();
+            $this->assign('data', $data);
+            return $this->fetch();
+        }
+    }
+
 }
