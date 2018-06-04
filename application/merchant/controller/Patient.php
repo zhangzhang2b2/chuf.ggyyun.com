@@ -46,7 +46,7 @@ class Patient extends Main
                 $post['status']=$post['status']=='on'?1:0;
              }
 
-             // 模型对象赋值
+             //更新
              $model->save($post,['id' => $post['id']]);
  
              $this->success('添加成功');

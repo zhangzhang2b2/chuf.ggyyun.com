@@ -172,6 +172,11 @@ class Merge extends Model
             $this->setAttr($this->updateTime, null);
         }
 
+        // 自动写入addtime更新时间
+        if ($this->autoWriteTimestamp && $this->addtime && !isset($this->data[$this->addtime])) {
+            $this->setAttr($this->addtime, null);
+        }
+
         // 事件回调
         if (false === $this->trigger('before_write', $this)) {
             return false;

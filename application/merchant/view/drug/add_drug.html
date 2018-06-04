@@ -1,0 +1,161 @@
+{extend name='public/modal'}
+{block name='content'}
+<style type="text/css">
+    .submit_btn{
+         float: center;
+  }
+</style>
+<form action="add_drug" class="layui-form layui-form-pane" id="mainForm" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                药品名称
+            </label>
+            <div class="layui-input-block">
+                <input name="name" id="name" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                类型
+            </label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" id="type" value="0" title="西药" checked="">
+                <input type="radio" name="type" id="type" value="1" title="中药">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                生产厂家
+            </label>
+            <div class="layui-input-block">
+                <input name="factory" id="factory" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                国药准字
+            </label>
+            <div class="layui-input-block">
+                <input name="word" id="word" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                拼音
+            </label>
+            <div class="layui-input-block">
+                <input name="pinyin" id="pinyin" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                剂型
+            </label>
+            <div class="layui-input-block">
+                <input name="formul" id="formul" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                单位
+            </label>
+            <div class="layui-input-block">
+                <input name="unit" id="unit" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                单价
+            </label>
+            <div class="layui-input-block">
+                <input name="price" id="price" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                规格
+            </label>
+            <div class="layui-input-block">
+                <input name="spec" id="spec" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                库存
+            </label>
+            <div class="layui-input-block">
+                <input type="number" name="stock" id="stock" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                备注
+            </label>
+            <div class="layui-input-block">
+                <input name="remark" id="remark" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" checked="" name="status" id="status"  lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block submit_btn">
+                <button type="submit" class="layui-btn layui-btn-success">保存</button>
+            </div>
+        </div>
+</form>
+{/block}
+{block name='js'}
+<script type="text/javascript">
+    $(function(){
+        var options = {
+              type:'post',           //post提交
+              //url:'http://ask.tongzhuo100.com/server/****.php?='+Math.random(),   //url
+              dataType:"json",        //json格式
+              data:{},    //如果需要提交附加参数，视情况添加
+              clearForm: false,        //成功提交后，清除所有表单元素的值
+              resetForm: false,        //成功提交后，重置所有表单元素的值
+              cache:false,
+              async:false,          //同步返回
+              success:function(data){
+                    if(data.code==0){
+                      layer.msg(data.msg);
+                    }else{
+                      layer.msg(data.msg,{icon:1,time:500},function(){
+                        $("#reset").click();
+                        lotus_close();
+                        parent.location.reload();
+                      });
+                    }
+                  //服务器端返回处理逻辑
+                },
+                error:function(XmlHttpRequest,textStatus,errorThrown){
+                  layer.msg('操作失败:服务器处理失败');
+              }
+            };
+          layui.use('form', function(){
+            var form = layui.form;
+            $('#mainForm').ajaxForm(options).submit(function(data){});
+          });
+
+        })
+      // });
+</script>
+{/block}

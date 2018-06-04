@@ -86,7 +86,8 @@ class Register extends Main
                 }
             }
         }
-        $list = model('Patient')->where($where)->order('id desc')->paginate("16", false, ['query'=>request()->param()]);
+        //当前账号的登记记录
+        $list = model('Patient')->where($where)->where('user_id',session('uid'))->order('id desc')->paginate("16", false, ['query'=>request()->param()]);
         $this->assign('list', $list);
         //标题传值
         $this->assign('item', ['item1'=>'记录','item2'=>'病患登记记录']);
