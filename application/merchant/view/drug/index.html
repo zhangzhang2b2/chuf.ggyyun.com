@@ -24,12 +24,12 @@
         </div>
         <div class="panel-body">
             <div>
-                <button onclick="lotus_show('新增药品信息','add_drug.html',1200,800)" class="btn btn-sm btn-small btn-success">新增药品
+                <button onclick="lotus_show('新增药品信息','add_drug.html',1200,800)" class="btn btn-sm btn-small btn-success"><i class="layui-icon"></i>新增药品
                 </button>
-                <button onclick="lotus_show('药品excel导入数据库','excle_drug.html',1200,800)" class="btn btn-sm btn-small btn-success">excel导入
-                </button>
+                <button type="button" name="myfile" class="btn  btn-danger btn-small" id="myfile">
+                    <i class="layui-icon"></i>上传文件</button>  
             </div>
-            <!--   <button class="btn  btn-danger btn-small">删除</button> -->
+            <div id="testdiv"></div>
         </div>
     </div>
 
@@ -201,5 +201,44 @@
                 })
         })
     }
+</script>
+
+<!-- 点击上传文件按钮 -->
+<script type="text/javascript">
+    layui.use(['form','upload'],function(){
+
+        var form=layui.form;
+        var upload=layui.upload;
+
+        upload.render({ //允许上传的文件后缀
+            elem: '#myfile'
+            ,url: "{:url('merchant/Drug/do_upload')}"
+            ,accept: 'file' //普通文件
+            ,exts: 'xls|excel|xlsx' //只允许上传压缩文件
+            ,done: function(res){
+                console.log(res);
+                var testdiv = document.getElementById("testdiv");
+                testdiv.innerHTML="<p><em>已上传文件：</em>"+res.data.name+"</p>";
+                if(res.code==1){
+                    layer.msg(res.msg, {
+                            icon: 6,
+                            time: 1500
+                        }, function () {
+                            console.log("ssss");
+                            location.reload();
+                        });
+                }else{
+                    layer.msg('解析失败',{icon:5});
+                }
+            }
+        });
+
+        form.on('submit(formsub)',function(data){
+            layer.msg('导入数据具体详情未协商确认,待确认后处理');
+            return false;
+        })
+        
+    })
+
 </script>
 {/block}

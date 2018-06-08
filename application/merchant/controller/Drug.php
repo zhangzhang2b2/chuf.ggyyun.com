@@ -15,8 +15,8 @@ class Drug extends Main
      */
     public function index()
     {
-        //当前账号的药品列表
-        $list  = model('DrugNew')->where('user_id',session('uid'))->order('id desc')->select();
+        //所有药品列表
+        $list  = model('DrugNew')->order('id desc')->select();
         $this->assign('list', $list);
         //标题传值
         $this->assign('item', ['item1'=>'药品','item2'=>'药品列表']);
@@ -99,23 +99,12 @@ class Drug extends Main
         $this->success('删除成功');
     }
 
-    //excel导入数据库
-    public function excle_drug()
-    {
-        if (Request::instance()->isPost()) {
-            $post = $this->request->post();
-            $this->success('登记成功');
-
-        } else {
-            return  $this->fetch();
-        }
-    }
 
     //上传文件
     public function do_upload(){
 
         //引入文件
-        \think\Loader::import('PHPExcel.PHPExcel');
+        \think\Loader::import('PHPExcel.Classes.PHPExcel');
         $objPHPExcel = new \PHPExcel();
 
         //获取表单上传文件
@@ -134,50 +123,64 @@ class Drug extends Main
         //上传文件的地址
         $filename = ROOT_PATH . 'public' . DS . 'uploads'.DS . $exclePath;
 
-
         $extension = strtolower( pathinfo($filename, PATHINFO_EXTENSION) );
 
-        \think\Loader::import('PHPExcel.IOFactory.PHPExcel_IOFactory');
+        \think\Loader::import('PHPExcel.Classes.PHPExcel.IOFactory.PHPExcel_IOFactory');
         if ($extension =='xlsx') {
             $objReader = new \PHPExcel_Reader_Excel2007();
-            $objExcel = $objReader ->load($filename);
-
         } else if ($extension =='xls') {
-
             $objReader = new \PHPExcel_Reader_Excel5();
-            $objExcel = $objReader->load($filename);
-
-
         }
-
+        $objExcel = $objReader ->load($filename,$encode = 'utf-8');
 
         $excel_array=$objExcel->getsheet(0)->toArray();   //转换为数组格式
         array_shift($excel_array);  //删除第一个数组(标题);
-        array_shift($excel_array);  //删除th
 
         $data=[];
         foreach ($excel_array as $k=>$v){
-            $data[$k]["danhao"]=$v[0];//单号
-            $data[$k]["type_name"]=$v[1];//类型名称
-            $data[$k]["name"]=$v[2];
-            $data[$k]["number"]=$v[3];
-            $data[$k]["price"]=$v[4];
-            $data[$k]["danwei"]=$v[0];
-            $data[$k]["create_user"]=$v[5];
-            $data[$k]["create_time"]=$v[6];
-            $data[$k]["remark"]=$v[7];
+            $drug_type='';
+            if($v[0]=='西药'){
+                $drug_type=0;
+            }elseif ($v[0]=='中药') {
+                $drug_type=1;
+            }
+            $data[$k]["type"]=$drug_type;//类型
+            $data[$k]["name"]=$v[1];//名称
+            $data[$k]["factory"]=$v[2];//生产厂家
+            $data[$k]["word"]=$v[3];//国药准字
+            $data[$k]["pinyin"]=$v[4];//拼音
+            $data[$k]["formul"]=$v[5];//剂型
+            $data[$k]["unit"]=$v[6];//单位
+            $data[$k]["price"]=$v[7];//单价
+            $data[$k]["spec"]=$v[8];//规格
+            $data[$k]["stock"]=$v[9];//库存
+            $data[$k]["remark"]=$v[10];//备注
         }
 
-        $msg=[
-            'code'=>1,
-            'msg'=>'已获取信息',
-        ];
-        $msg['data']['src']=$filename;
-        $msg['data']['data']=$data;
 
-        return json_encode($msg);
-
+        /**获取数据data集合，存入数据库自己写 */
+        if(model('DrugNew')->saveAll($data)) 
+        {
+            $msg=[
+                'code'=>1,
+                'msg'=>'导入成功',
+            ];
+            $msg['data']['name']=$exclePath;//文件名
+            $msg['data']['src']=$filename;//路径
+            $msg['data']['data']=$data;//数据
+            return json_encode($msg);
+        }else{
+            $msg=[
+                'code'=>0,
+                'msg'=>'导入失败请重试',
+            ];
+            return json_encode($msg);
+        }   
 
     }
+
+
+
+
 
 }
