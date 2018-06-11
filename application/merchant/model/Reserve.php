@@ -13,4 +13,9 @@ class Reserve extends Model
         return $this->hasOne('File','id','file_id');
     }
 
+    public function patientInfo()
+    {
+        return $this->hasOne('Patient','id','patient_id');
+    }
+
 }

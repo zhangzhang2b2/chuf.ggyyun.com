@@ -86,8 +86,15 @@ class Register extends Main
                 }
             }
         }
+
+        //当前医院的账号条件
+        $pid=session('pid');
+        if($pid==0){ //上级id为0，则为
+            $pid==session('uid');
+        }
+
         //当前账号的登记记录
-        $list = model('Patient')->where($where)->where('user_id',session('uid'))->order('id desc')->paginate("16", false, ['query'=>request()->param()]);
+        $list = model('Patient')->where($where)->where('admin_id',$pid)->order('id desc')->paginate("16", false, ['query'=>request()->param()]);
         $this->assign('list', $list);
         //标题传值
         $this->assign('item', ['item1'=>'记录','item2'=>'病患登记记录']);

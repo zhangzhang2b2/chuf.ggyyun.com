@@ -11,12 +11,18 @@ class Drug extends Main
 {
 
     /**
-     * 药品列表界面
+     * 药品列表界面（每个医院都有自己的药品库）
      */
     public function index()
     {
+        //当前医院id
+        $pid=session('pid');
+        if($pid==0){ //上级id为0，则为
+            $pid==session('uid');
+        }
+
         //所有药品列表
-        $list  = model('DrugNew')->order('id desc')->select();
+        $list  = model('DrugNew')->where('admin_id',$pid)->order('id desc')->select();
         $this->assign('list', $list);
         //标题传值
         $this->assign('item', ['item1'=>'药品','item2'=>'药品列表']);
@@ -113,9 +119,11 @@ class Drug extends Main
 
         //数据为空返回错误
         if(empty($info)){
-            $output['status'] = false;
-            $output['info'] = '导入数据失败~';
-            $this->ajaxReturn($output);
+            $msg=[
+                'code'=>0,
+                'msg'=>'导入失败请重试',
+            ];
+            return json_encode($msg);
         }
 
         //获取文件名
@@ -155,6 +163,8 @@ class Drug extends Main
             $data[$k]["spec"]=$v[8];//规格
             $data[$k]["stock"]=$v[9];//库存
             $data[$k]["remark"]=$v[10];//备注
+            $data[$k]["admin_id"]=session('pid');//上级用户
+            $data[$k]["user_id"]=session('uid');//当前用户
         }
 
 

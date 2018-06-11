@@ -9,7 +9,7 @@ class Patient extends Model
 
     public function file()
     {
-        return $this->hasOne('File','id','file_id');
+        return $this->hasOne('File','id','file_id'); 
     }
 
 }
