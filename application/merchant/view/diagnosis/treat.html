@@ -91,25 +91,18 @@
           </div>
         </div>
         <div class="layui-col-md10">
-          <!-- <div class="right">
-            <ul class="layui-nav layui-bg-green">
-                <li class="layui-nav-item layui-this"><a href="">诊断病例</a></li>
-                <li class="layui-nav-item"><a href="">开具处方</a></li>
-                <li class="layui-nav-item"><a href="">检查治疗</a></li>
-                <li class="layui-nav-item"><a href="">其他收费</a></li>
-                <li class="layui-nav-item"><a href="">报告</a></li>
-              </ul>
-          </div> -->
             <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="width: 98%">
                 <ul class="layui-tab-title  layui-bg-green">
-                  <li class="layui-this">网站设置</li>
-                  <li>用户管理</li>
-                  <li>权限分配</li>
-                  <li>商品管理</li>
-                  <li>订单管理</li>
+                  <li class="layui-this">诊断病例</li>
+                  <li>开具处方</li>
+                  <li>检查治疗</li>
+                  <li>其他收费</li>
+                  <li>报告</li>
                 </ul>
                 <div class="layui-tab-content" style="min-height: 680px;background: #ffffff">
-                  <div class="layui-tab-item layui-show">内容不一样是要有，因为你可以监听tab事件（阅读下文档就是了）</div>
+                  <div class="layui-tab-item layui-show">
+                      <button onclick='pushXX()' class="layui-btn layui-btn-sm">测试通知</button>
+                  </div>
                   <div class="layui-tab-item">内容2</div>
                   <div class="layui-tab-item">内容3</div>
                   <div class="layui-tab-item">内容4</div>
@@ -187,34 +180,28 @@
     });
 
 
-    //删除用户
-    function delete_register(id) {
-        layer.confirm('确定删除吗？', function (index) {
-            $.ajax({
-                    url: '{:url("merchant/Register/delete_register")}',
-                    type: 'get',
-                    dataType: 'json',
-                    data: {
-                        id: id
-                    },
-                })
-                .done(function (data) {
-                    //回调提示
-                    if (data.code == 0) {
-                        layer.msg(data.msg, {
-                            icon: 2,
-                            time: 1000
-                        });
-                    } else {
-                        layer.msg(data.msg, {
-                            icon: 1,
-                            time: 1500
-                        }, function () {
-                            location.reload();
-                        });
-                    }
-                })
-        })
+    //推送通知
+    function pushXX() {
+
+
+        layer.confirm("是否发送通知",{
+          btn: ['确定','取消'] //按钮
+        },function(){
+          $.post('{:url("merchant/Diagnosis/pushAString")}', {}, function(data, textStatus, xhr) {
+              console.log(data)
+            /*optional stuff to do after success */
+            if(data.code==0){
+              layer.msg(data.msg);
+            }else{
+              layer.msg(data.msg,{icon:1,time:800},function(){
+                location.reload();
+              });
+            }
+          });
+        }); 
+        
     }
+
+    
 </script>
 {/block}

@@ -8,6 +8,8 @@ use app\admin\model\AdminUserNew  as  AdminUserNewModel;
 use think\Request;
 use think\Validate;
 
+use app\lib\event\PushEvent;    //引用文件
+
 class Diagnosis extends Main
 {
     //定义
@@ -97,6 +99,19 @@ class Diagnosis extends Main
         //标题传值
         $this->assign('item', ['item1'=>'记录','item2'=>'接诊记录']);
         return  $this->fetch();
+    }
+
+
+    /**
+     * 推送一个字符串
+     */
+    public function pushAString()
+    {
+        $string = 'Man Always dddddd';  //推送的消息内容
+        // $string = input('msg') ? : $string;  //判断是否有输入消息
+        $push = new PushEvent();    //实例化对象
+        $push->setUser('123')->setContent($string)->push();   //setUser指定推送给的用户123，设置空则全部用户都推送。setContent推送的内容
+        return json_code(200, '请求成功', 1);
     }
 
 
