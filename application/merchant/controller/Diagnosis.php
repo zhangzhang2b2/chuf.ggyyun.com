@@ -56,12 +56,17 @@ class Diagnosis extends Main
      */
     public function treat()
     {
-        $id=input('param.id');
-        $patientData=model('Patient')->where('id','eq',$id)->find();
-        $this->assign('patientData', $patientData);
+        /*获取病例信息数据*/
+        $id=input('param.id');//就诊id'
+        $this->assign('reserve_id', $id);
+        //根据接诊id查询病例数据
+        $data = model('Reserve')->with('patientInfo,recordsInfo,recipelNewInfo,otherpayInfo,checkInfo')->where('id','eq',$id)->find();
+        $this->assign('data', $data);
+             
         //标题传值
         $this->assign('item', ['item1'=>'接诊','item2'=>'正在接诊']);
         return  $this->fetch();
+
     }
 
     /**
@@ -112,6 +117,37 @@ class Diagnosis extends Main
         $push = new PushEvent();    //实例化对象
         $push->setUser('123')->setContent($string)->push();   //setUser指定推送给的用户123，设置空则全部用户都推送。setContent推送的内容
         return json_code(200, '请求成功', 1);
+    }
+
+    /**
+     * 保存诊断病例
+     */
+    public function cases()
+    {
+        $post = $this->request->post();
+
+        $records = model('Records');
+        try{
+            //把病例更新
+            $id=$post['id'];
+            $records->where('id',$post['id'])->update(
+                [
+                    'onset' =>  $post['onset'],
+                    'talk' =>  $post['talk'],
+                    'diagnosis'  =>  $post['diagnosis'],
+                    'now' =>  $post['now'],
+                    'old' =>  $post['old'],
+                    'allergy' =>  $post['allergy'],
+                    'opinion' =>  $post['opinion'],
+                    'remark' =>  $post['remark'],
+                ]
+            );
+            return json_code(200, '请求成功', $id);
+        }catch(\Exception $e){
+            return json_code(0, '请稍候重试');
+        }
+
+        
     }
 
 

@@ -41,6 +41,15 @@
     .layui-tab-brief>.layui-tab-more li.layui-this:after, .layui-tab-brief>.layui-tab-title .layui-this:after {
         border-bottom: 5px solid #5FB878;
     }
+    .layui-form-label { 
+        width: 100px;
+    }
+    .btn-left{
+        margin-left: 10%;
+    }
+    .layui-tab-bar {
+        background-color: #009688;
+    }
 </style>
 
 <!-- Content Header (Page header) -->
@@ -68,30 +77,30 @@
                 <image style="width: 100%;height: auto;" src="/static/AdminLTE/dist/img/avatar5.png"></image>
             </div>
             <div class="left-one">
-                <label class="la_name">{$patientData.name}</label>
+                <label class="la_name">{$data.patientInfo.name}</label>
                 <button class="layui-btn layui-btn-sm " style="margin: auto;width: 100%;background: #017369">历史病例</button>
             </div>
-            <div class="left-tow">电话：{$patientData.phone}</div>
+            <div class="left-tow">电话：{$data.patientInfo.phone}</div>
             <div class="left-tow">性别：
-                {switch name="$patientData.sex"}
+                {switch name="$data.patientInfo.sex"}
                     {case value="1"}男{/case}
                     {case value="2"}女{/case}
                     {default /}不详
                 {/switch}
             </div>
-            <div class="left-tow">年龄：{$patientData.age}</div>
-            <div class="left-tow">身高：{$patientData.height}</div>
-            <div class="left-tow">体重：{$patientData.weight}</div>
-            <div class="left-tow">血型：{$patientData.blood}</div>
-            <div class="left-tow">出生年月：{$patientData.birth}</div>
-            <div class="left-tow">身份证：{$patientData.idcard}</div>
-            <div class="left-tow">住址：{$patientData.address}</div>
-            <div class="left-tow">微信：{$patientData.wechat}</div>
-            <div class="left-tow">邮箱：{$patientData.email}</div>
+            <div class="left-tow">年龄：{$data.patientInfo.age}</div>
+            <div class="left-tow">身高：{$data.patientInfo.height}</div>
+            <div class="left-tow">体重：{$data.patientInfo.weight}</div>
+            <div class="left-tow">血型：{$data.patientInfo.blood}</div>
+            <div class="left-tow">出生年月：{$data.patientInfo.birth}</div>
+            <div class="left-tow">身份证：{$data.patientInfo.idcard}</div>
+            <div class="left-tow">住址：{$data.patientInfo.address}</div>
+            <div class="left-tow">微信：{$data.patientInfo.wechat}</div>
+            <div class="left-tow">邮箱：{$data.patientInfo.email}</div>
           </div>
         </div>
         <div class="layui-col-md10">
-            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="width: 98%">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" >
                 <ul class="layui-tab-title  layui-bg-green">
                   <li class="layui-this">诊断病例</li>
                   <li>开具处方</li>
@@ -101,7 +110,60 @@
                 </ul>
                 <div class="layui-tab-content" style="min-height: 680px;background: #ffffff">
                   <div class="layui-tab-item layui-show">
-                      <button onclick='pushXX()' class="layui-btn layui-btn-sm">测试通知</button>
+                        <form action="{:url('merchant/diagnosis/cases')}" class="layui-form layui-form-pane" id="mainForm" method="post">
+                        <input type="text" name="id" id="id" value="{$data.recordsInfo.id}"  class="layui-input"> 
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">发病日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="onset" id="onset" value="{$data.recordsInfo.onset}" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主诉</label>
+                            <div class="layui-input-block">
+                                <textarea name="talk" id="talk" class="layui-textarea">{$data.recordsInfo.talk}</textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">初步诊断</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="diagnosis" id="diagnosis" value="{$data.recordsInfo.diagnosis}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">现病史</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="now" id="now" value="{$data.recordsInfo.now}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">既往史</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="old" id="old" value="{$data.recordsInfo.old}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">过敏史</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="allergy" id="allergy" value="{$data.recordsInfo.allergy}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">治疗意见</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="opinion" id="opinion" value="{$data.recordsInfo.opinion}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="remark" id="remark" value="{$data.recordsInfo.remark}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <button class="layui-btn" type="submit">保存</button>
+                        <button style="display: none;"  type="reset" class=" layui-btn layui-btn-primary">重置</button>
+                        <button onclick='pushXX()' style="display: none" class="layui-btn layui-btn-sm">测试通知</button>
+                    </form>
                   </div>
                   <div class="layui-tab-item">内容2</div>
                   <div class="layui-tab-item">内容3</div>
@@ -142,6 +204,7 @@
             cache: false,
             async: false, //同步返回
             success: function (data) {
+                console.log(data);
                 if (data.code == 0) {
                     layer.msg(data.msg, {
                         icon: 2,
@@ -154,7 +217,7 @@
                         offset: 'm',
                         time: 1500
                     }, function () {
-                        location.reload();
+                        // location.reload();
                     });
                 }
                 //服务器端返回处理逻辑
@@ -182,8 +245,6 @@
 
     //推送通知
     function pushXX() {
-
-
         layer.confirm("是否发送通知",{
           btn: ['确定','取消'] //按钮
         },function(){
@@ -199,9 +260,17 @@
             }
           });
         }); 
-        
     }
 
-    
+</script>
+
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //日期
+        laydate.render({
+        elem: '#onset'
+        });
+    });
 </script>
 {/block}
