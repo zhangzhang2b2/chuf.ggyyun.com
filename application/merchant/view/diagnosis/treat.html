@@ -50,6 +50,11 @@
     .layui-tab-bar {
         background-color: #009688;
     }
+    .bl-background{
+        margin: auto;
+        width: 100%;
+        background: #017369;
+    }
 </style>
 
 <!-- Content Header (Page header) -->
@@ -78,7 +83,7 @@
             </div>
             <div class="left-one">
                 <label class="la_name">{$data.patientInfo.name}</label>
-                <button class="layui-btn layui-btn-sm " style="margin: auto;width: 100%;background: #017369">历史病例</button>
+                <button  onclick="click_cases()" class="layui-btn layui-btn-sm bl-background">历史病例</button>
             </div>
             <div class="left-tow">电话：{$data.patientInfo.phone}</div>
             <div class="left-tow">性别：
@@ -260,6 +265,12 @@
             }
           });
         }); 
+    }
+
+
+    //历史病例
+    function click_cases(){
+        lotus_show('历史病例',"<?php echo url('merchant/diagnosis/cases_history'); ?>?id={$data.patient_id}",800,600);
     }
 
 </script>

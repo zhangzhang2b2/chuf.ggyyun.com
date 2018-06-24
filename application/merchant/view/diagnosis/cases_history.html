@@ -1,0 +1,42 @@
+{extend name='public/modal'}
+{block name='content'}
+
+  <div class="layui-collapse" lay-filter="test">
+    {volist name="data" id="vo"}
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">{$vo.recordsInfo.diagnosis} <text style="color: darkgrey">{$vo.recordsInfo.addtime}</text></h2>
+            <div class="layui-colla-content">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            主诉：{$vo.recordsInfo.talk}
+                        </div>
+                        <div class="layui-card-header">
+                            发病日期：{$vo.recordsInfo.onset}
+                        </div>
+                        <div class="layui-card-header">
+                            现病史：{$vo.recordsInfo.now}
+                        </div>
+                        <div class="layui-card-header">
+                            既往史：{$vo.recordsInfo.old}
+                        </div>
+                        <div class="layui-card-header">
+                            过敏史：{$vo.recordsInfo.allergy}
+                        </div>
+                        <div class="layui-card-header">
+                            治疗意见：{$vo.recordsInfo.opinion}
+                        </div>
+                        <div class="layui-card-header">
+                            备注：{$vo.recordsInfo.remark}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/volist}
+
+</div>
+{/block}
+{block name='js'}
+
+{/block}

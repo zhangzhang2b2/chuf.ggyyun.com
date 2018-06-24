@@ -147,6 +147,21 @@ class Diagnosis extends Main
             return json_code(0, '请稍候重试');
         }
 
+    }
+
+
+    /**
+     * 历史病例
+     */
+    public function cases_history($id){
+        //查找接诊结束的病历
+        $data = model('Reserve')->with('patientInfo,recordsInfo')
+            ->where('patient_id','eq',$id)
+            ->where('status','eq',3)
+            ->order('addtime desc')
+            ->select();
+        $this->assign('data',$data);
+        return $this->fetch();
         
     }
 
